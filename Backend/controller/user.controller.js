@@ -23,4 +23,36 @@ const getUser = async (req, res) => {
 
 const createUser = async (req, res) => {
   const { name, email, password, role, courses } = req.body();
+
+  if (!name || !email || !password || !role || !courses) {
+    res.status(400).json({
+      success: false,
+      message: "please provide all the necessary data",
+    });
+  }
+
+  const exists = await User.findOne({ email });
+
+  if (exists) {
+    res.status(409).json({
+      success: false,
+      message: "Email already in use",
+    });
+  }
+
+  const data = {
+    name,
+    email,
+    password,
+    role,
+    courses,
+  };
+
+  await User.create(data);
+
+  res.status(200).json({
+    success: true,
+    message: "User created successfully",
+    data: data,
+  });
 };
