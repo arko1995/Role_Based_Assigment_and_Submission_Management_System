@@ -27,8 +27,11 @@ const userSchema = new mongoose.Schema(
     },
     course: {
       type: String,
-      required: true,
+      default: null,
       trim: true,
+      required: () => {
+        this.role === "student";
+      },
     },
   },
   {
