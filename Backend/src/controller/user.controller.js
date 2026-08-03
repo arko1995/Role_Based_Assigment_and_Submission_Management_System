@@ -22,37 +22,74 @@ const getUser = async (req, res) => {
 };
 
 const createUser = async (req, res) => {
-  const { name, email, password, role, courses } = req.body();
+  try {
+    const { name, email, password, role, course } = req.body;
 
-  if (!name || !email || !password || !role || !courses) {
-    res.status(400).json({
+    if (!name || !email || !password || !role) {
+      res.status(400).json({
+        success: false,
+        message: "please provide all the necessary data",
+      });
+      return;
+    }
+
+    const allowedRole = ["teacher", "admin", "student"];
+
+    if (!allowedRole.includes(role)) {
+      res.status(400).json({
+        success: false,
+        message: "Please select a valid role",
+      });
+      return;
+    }
+
+    if (role === "student" && !course) {
+      res.status(400).json({
+        success: false,
+        message: "please choose a course",
+      });
+      return;
+    }
+
+    const trimmedMail = email.trim().toLowerCase();
+
+    const exists = await User.findOne({ email: trimmedMail });
+
+    if (exists) {
+      res.status(409).json({
+        success: false,
+        message: "Email already in use",
+      });
+      return;
+    }
+
+    const newUser = {
+      name,
+      email: trimmedMail,
+      password,
+      role,
+      course,
+    };
+
+    const createdUser = await User.create(newUser);
+
+    const data = {
+      id: createdUser._id,
+      name: createdUser.name,
+      email: createdUser.email,
+      role: createdUser.role,
+      course: createdUser.course,
+    };
+
+    res.status(201).json({
+      success: true,
+      message: "User created successfully",
+      data: data,
+    });
+  } catch (error) {
+    res.status(500).json({
       success: false,
-      message: "please provide all the necessary data",
+      message: error.message,
     });
   }
-
-  const exists = await User.findOne({ email });
-
-  if (exists) {
-    res.status(409).json({
-      success: false,
-      message: "Email already in use",
-    });
-  }
-
-  const data = {
-    name,
-    email,
-    password,
-    role,
-    courses,
-  };
-
-  await User.create(data);
-
-  res.status(200).json({
-    success: true,
-    message: "User created successfully",
-    data: data,
-  });
 };
