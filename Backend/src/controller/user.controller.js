@@ -93,3 +93,19 @@ const createUser = async (req, res) => {
     });
   }
 };
+
+const updateUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const user = User.findById(id);
+
+    if (!user) {
+      res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+      return;
+    }
+  } catch (error) {}
+};
