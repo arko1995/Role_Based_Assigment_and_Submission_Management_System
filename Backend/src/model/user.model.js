@@ -30,7 +30,7 @@ const userSchema = new mongoose.Schema(
       default: null,
       trim: true,
       required: () => {
-        this.role === "student";
+        return this.role === "student";
       },
     },
   },

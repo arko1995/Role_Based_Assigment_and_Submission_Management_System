@@ -17,7 +17,11 @@ const getUser = async (req, res) => {
       data: data,
     });
   } catch (error) {
-    console.error("Error fetching data", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      error: error,
+    });
   }
 };
 
@@ -89,7 +93,8 @@ const createUser = async (req, res) => {
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: error.message,
+      message: "Internal server error",
+      error: error,
     });
   }
 };
@@ -98,7 +103,7 @@ const updateUser = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const user = User.findById(id);
+    const user = await User.findById(id);
 
     if (!user) {
       res.status(404).json({
@@ -107,5 +112,21 @@ const updateUser = async (req, res) => {
       });
       return;
     }
-  } catch (error) {}
+
+    const updatedUser = await User.findByIdAndUpdate(req.body);
+
+    res.status(200).json({
+      success: true,
+      message: "user updated successfully",
+      data: updateUser,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      error: error,
+    });
+  }
 };
+
+export { createUser, getUser, updateUser };
