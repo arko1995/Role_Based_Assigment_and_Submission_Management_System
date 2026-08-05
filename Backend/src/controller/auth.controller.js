@@ -7,16 +7,17 @@ const login = async (req, res) => {
     const { email, password } = req.body;
 
     if (!email || !password) {
-      res.status(400).json({
+      return res.status(400).json({
         success: false,
         message: "please provide required information",
       });
     }
 
-    const user = await User.findOne({ email }).select("+password");
+    const normalizedEmail = email.trim().toLowerCase();
+    const user = await User.findOne({ normalizedEmail }).select("+password");
 
     if (!user) {
-      res.status(404).json({
+      res.status(401).json({
         success: false,
         message: "No user found",
       });
@@ -38,8 +39,6 @@ const login = async (req, res) => {
       process.env.JWT_SECRET,
       { expiresIn: "7d" },
     );
-
-    res.cookie("accessToken", token);
 
     res.status(200).json({
       success: true,
