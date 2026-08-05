@@ -4,16 +4,20 @@ import { connectDB } from "./lib/db.js";
 import router from "./routes/user.route.js";
 dotenv.config();
 const app = express();
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 5000;
 
 app.use(express.json());
 app.use("/api", router);
 
-app.listen(PORT, async () => {
+const startServer = async () => {
   try {
-    connectDB();
-    console.log("server started on port:", PORT);
+    await connectDB();
+
+    app.listen(PORT, () => {
+      console.log(`Server started on ${PORT}`);
+    });
   } catch (error) {
-    console.log(error);
+    console.error("failed to start server", error);
+    process.exit(1);
   }
-});
+};
