@@ -1,13 +1,11 @@
 import express from "express";
 import dotenv from "dotenv";
 import { connectDB } from "./lib/db.js";
-import router from "./routes/user.route.js";
-dotenv.config();
-const app = express();
-const PORT = process.env.PORT || 5000;
+import app from "./app.js";
 
-app.use(express.json());
-app.use("/api", router);
+dotenv.config();
+
+const PORT = process.env.PORT || 5000;
 
 const startServer = async () => {
   try {
