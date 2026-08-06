@@ -9,7 +9,7 @@ const router = express.Router();
 
 router.use(protectRoute);
 router.use(allowRoles("admin"));
-router.route("/").get(getUser).post(createUser);
-router.patch("/:id", updateUser);
+router.route("/users").get(getUser).post(createUser);
+router.patch("/users/:id", updateUser);
 
 export default router;

@@ -104,6 +104,8 @@ const updateUser = async (req, res) => {
   try {
     const { id } = req.params;
 
+    const { name, email, role, password, course } = req.body || {};
+
     const user = await User.findById(id);
 
     if (!user) {
@@ -114,7 +116,31 @@ const updateUser = async (req, res) => {
       return;
     }
 
-    const updatedUser = await User.findByIdAndUpdate(id, req.body);
+    if (password !== undefined) {
+      return res.status(400).json({
+        success: false,
+        message: "Password cannot be updated here",
+      });
+    }
+
+    let updates = {};
+
+    if (name !== undefined) updates.name = name.trim();
+    if (email !== undefined) updates.email = email.trim().toLowerCase();
+    if (role !== undefined) updates.role = role.trim().toLowerCase();
+    if (course !== undefined) updates.course = course.trim();
+
+    if (Object.keys(updates).length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: "No valid information provided to update",
+      });
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(id, updates, {
+      runValidators: true,
+      new: true,
+    });
 
     res.status(200).json({
       success: true,
