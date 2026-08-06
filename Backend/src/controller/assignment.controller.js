@@ -2,15 +2,8 @@ import Assignment from "../model/assignment.model.js";
 
 export const createAssignment = async (req, res) => {
   try {
-    const {
-      title,
-      description,
-      course,
-      subject,
-      deadline,
-      maxMarks,
-      createdBy,
-    } = req.body;
+    const { title, description, course, subject, deadline, maxMarks } =
+      req.body || {};
 
     if (
       !title ||
@@ -18,8 +11,7 @@ export const createAssignment = async (req, res) => {
       !course ||
       !subject ||
       !deadline ||
-      !maxMarks ||
-      !createdBy
+      !maxMarks
     ) {
       return res.status(400).json({
         success: false,
@@ -34,7 +26,7 @@ export const createAssignment = async (req, res) => {
       subject,
       deadline,
       maxMarks,
-      createdBy,
+      createdBy: req.user._id,
     });
 
     res.status(201).json({

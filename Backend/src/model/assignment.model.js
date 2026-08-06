@@ -1,4 +1,4 @@
-import mongoose, { Mongoose } from "mongoose";
+import mongoose from "mongoose";
 
 const assignmentSchema = new mongoose.Schema(
   {
@@ -30,6 +30,11 @@ const assignmentSchema = new mongoose.Schema(
       type: Number,
       required: true,
       min: 0,
+    },
+    status: {
+      type: String,
+      enum: ["draft", "published"],
+      default: "draft",
     },
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
