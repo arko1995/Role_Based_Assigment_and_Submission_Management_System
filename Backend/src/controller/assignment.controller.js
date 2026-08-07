@@ -184,7 +184,7 @@ const deleteAssignment = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const assignment = await Assignment.findById(id).populate("teacher");
+    const assignment = await Assignment.findById(id);
 
     if (!assignment) {
       return res.status(404).json({
@@ -195,7 +195,7 @@ const deleteAssignment = async (req, res) => {
 
     if (
       req.user.role === "teacher" &&
-      assignment.createdBy._id.toString() !== id.toString()
+      assignment.createdBy._id.toString() !== req.user.id.toString()
     ) {
       return res.status(403).json({
         success: false,
