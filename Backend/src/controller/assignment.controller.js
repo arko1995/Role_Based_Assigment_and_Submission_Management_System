@@ -219,10 +219,51 @@ const deleteAssignment = async (req, res) => {
   }
 };
 
+const publishAssignment = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const assignment = await Assignment.findById(id);
+
+    if (!assignment) {
+      return res.status(404).json({
+        success: false,
+        message: "Document not found",
+      });
+    }
+
+    if (req.user.role === "teacher") {
+      if (assignment.createdBy._id.toString() !== req.user.id.toString()) {
+        return res.status(403).json({
+          success: false,
+          message: "Unauthorized access",
+        });
+      }
+    }
+
+    assignment.status = "published";
+
+    await assignment.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Assignment published successfully",
+      data: assignment,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      error: error.message,
+    });
+  }
+};
+
 export {
   createAssignment,
   getAssignment,
   getAssignmentById,
   updateAssignment,
   deleteAssignment,
+  publishAssignment,
 };

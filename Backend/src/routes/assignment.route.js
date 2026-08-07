@@ -4,6 +4,7 @@ import {
   deleteAssignment,
   getAssignment,
   getAssignmentById,
+  publishAssignment,
   updateAssignment,
 } from "../controller/assignment.controller.js";
 import { protectRoute, allowRoles } from "../middleware/auth.middleware.js";
@@ -22,5 +23,9 @@ router
   .get(allowRoles("teacher", "student", "admin"), getAssignmentById)
   .patch(allowRoles("teacher", "admin"), updateAssignment)
   .delete(allowRoles("teacher", "admin"), deleteAssignment);
+
+router
+  .route("/:id/publish")
+  .patch(allowRoles("admin", "teacher"), publishAssignment);
 
 export default router;
