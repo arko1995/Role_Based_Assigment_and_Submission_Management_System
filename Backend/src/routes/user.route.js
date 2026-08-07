@@ -1,6 +1,7 @@
 import express from "express";
 import {
   createUser,
+  deleteUser,
   getUser,
   updateUser,
 } from "../controller/user.controller.js";
@@ -10,6 +11,6 @@ const router = express.Router();
 router.use(protectRoute);
 router.use(allowRoles("admin"));
 router.route("/users").get(getUser).post(createUser);
-router.patch("/users/:id", updateUser);
+router.route("/users/:id").patch(updateUser).delete(deleteUser);
 
 export default router;
