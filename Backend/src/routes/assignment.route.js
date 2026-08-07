@@ -21,6 +21,6 @@ router
   .route("/:id")
   .get(allowRoles("teacher", "student", "admin"), getAssignmentById)
   .patch(allowRoles("teacher", "admin"), updateAssignment)
-  .delete(deleteAssignment);
+  .delete(allowRoles("teacher", "admin"), deleteAssignment);
 
 export default router;

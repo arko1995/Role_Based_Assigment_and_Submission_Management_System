@@ -158,7 +158,7 @@ const updateUser = async (req, res) => {
 
 const deleteUser = async (req, res) => {
   try {
-    const { id } = req.params.id;
+    const { id } = req.params;
 
     const user = await User.findById(id);
 

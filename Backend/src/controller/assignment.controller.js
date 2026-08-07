@@ -182,14 +182,24 @@ const updateAssignment = async (req, res) => {
 
 const deleteAssignment = async (req, res) => {
   try {
-    const { id } = req.params.id;
+    const { id } = req.params;
 
-    const assignment = await Assignment.findById(id);
+    const assignment = await Assignment.findById(id).populate("teacher");
 
     if (!assignment) {
       return res.status(404).json({
         success: false,
         message: "Document not found",
+      });
+    }
+
+    if (
+      req.user.role === "teacher" &&
+      assignment.createdBy._id.toString() !== id.toString()
+    ) {
+      return res.status(403).json({
+        success: false,
+        message: "Unauthorized access",
       });
     }
 
