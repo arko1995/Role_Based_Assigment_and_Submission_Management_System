@@ -1,11 +1,17 @@
 import express from "express";
-import { createAssignment } from "../controller/assignment.controller.js";
+import {
+  createAssignment,
+  getAssignment,
+} from "../controller/assignment.controller.js";
 import { protectRoute, allowRoles } from "../middleware/auth.middleware.js";
 
 const router = express.Router();
 
 router.use(protectRoute);
 
-router.route("/").post(allowRoles("teacher"), createAssignment);
+router
+  .route("/")
+  .post(allowRoles("teacher"), createAssignment)
+  .get(allowRoles("student", "teacher", "admin"), getAssignment);
 
 export default router;
