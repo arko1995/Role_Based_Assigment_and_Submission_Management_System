@@ -14,10 +14,10 @@ const createSubmission = async (req, res) => {
       });
     }
 
-    if (assignment.status === published) {
+    if (assignment.status !== "published") {
       return res.status(400).json({
         success: false,
-        message: "Assignment already published",
+        message: "Assignment is not published yet",
       });
     }
 
@@ -27,5 +27,30 @@ const createSubmission = async (req, res) => {
         message: "Unauthorized access",
       });
     }
-  } catch (error) {}
+
+    if (new Date() > assignment.deadline) {
+      return res.status(400).json({
+        success: false,
+        message: "Submission date expired",
+      });
+    }
+
+    const submittedAssignment = await Submission.create({
+      assignment: assignmentId,
+      student: req.user.id,
+      answer,
+    });
+
+    res.status(201).json({
+      success: true,
+      message: "Document created successfully",
+      data: submittedAssignment,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      error: error.message,
+    });
+  }
 };
