@@ -22,7 +22,7 @@ const createSubmission = async (req, res) => {
     }
 
     if (assignment.course !== req.user.course) {
-      return res.status(400).json({
+      return res.status(403).json({
         success: false,
         message: "Unauthorized access",
       });
