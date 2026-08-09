@@ -137,19 +137,14 @@ const updateSubmission = async (req, res) => {
 
 const getMySubmissions = async (req, res) => {
   try {
-    const submissions = await Submission.find({ student: req.user.id });
-
-    if (!submissions) {
-      return res.status(404).json({
-        success: false,
-        message: "Submission not found",
-      });
-    }
+    const submissions = await Submission.find({
+      student: req.user.id,
+    }).populate("assignment", "title subject course deadline maxMarks");
 
     res.status(200).json({
       success: false,
       message: "Fetched submission data",
-      data: submission,
+      data: submissions,
     });
   } catch (error) {
     res.status(500).json({
@@ -174,7 +169,7 @@ const getAssignmentSubmissions = async (req, res) => {
     }
 
     if (req.user.role === "teacher") {
-      if (assignment.createdBy !== req.user.id) {
+      if (assignment.createdBy.toString() !== req.user.id.toString()) {
         return res.status(403).json({
           success: false,
           message: "You don't have access to this document",

@@ -11,17 +11,26 @@ import { protectRoute, allowRoles } from "../middleware/auth.middleware.js";
 const router = express.Router();
 router.use(protectRoute);
 
-router
-  .route("/")
-  .get(allowRoles("student"), getMySubmissions)
-  .get(allowRoles("admin"), getAllSubmissions);
+//student
+router.get("/my", allowRoles("student"), getMySubmissions);
+router.post(
+  "/assignment/:assignmentId",
+  allowRoles("student"),
+  createSubmission,
+);
+router.patch("/:submissionId", allowRoles("student"), updateSubmission);
 
-router
-  .route("/:assignmentId")
-  .post(allowRoles("student"), createSubmission)
-  .get(allowRoles("teacher", "admin"), getAssignmentSubmissions)
-  .patch(allowRoles("teacher"), gradeSubmissions);
+//teacher/admin
+router.get(
+  "/assignment/assignmentId",
+  allowRoles("admin", "teacher"),
+  getAssignmentSubmissions,
+);
 
-router.route("/:submissionId").patch(allowRoles("student"), updateSubmission);
+//teacher
+router.patch("/:submissionId/grade", allowRoles("teacher"), gradeSubmissions);
+
+//admin
+router.get("/", allowRoles("admin"), getAllSubmissions);
 
 export default router;
