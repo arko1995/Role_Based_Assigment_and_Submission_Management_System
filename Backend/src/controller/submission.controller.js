@@ -54,3 +54,5 @@ const createSubmission = async (req, res) => {
     });
   }
 };
+
+export { createSubmission };
