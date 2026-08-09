@@ -41,6 +41,18 @@ const createSubmission = async (req, res) => {
       });
     }
 
+    const existingSubmission = await Submission.find({
+      assignment: assignmentId,
+      student: req.user.id,
+    });
+
+    if (existingSubmission) {
+      return res.status(400).json({
+        success: false,
+        message: "This assignment has already been submitted",
+      });
+    }
+
     const submittedAssignment = await Submission.create({
       assignment: assignmentId,
       student: req.user.id,
