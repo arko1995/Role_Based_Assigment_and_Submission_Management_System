@@ -142,7 +142,7 @@ const getMySubmissions = async (req, res) => {
     }).populate("assignment", "title subject course deadline maxMarks");
 
     res.status(200).json({
-      success: false,
+      success: true,
       message: "Fetched submission data",
       data: submissions,
     });
@@ -224,7 +224,7 @@ const gradeSubmissions = async (req, res) => {
   try {
     const { submissionId } = req.params;
 
-    const { marks } = req.body || {};
+    const { marks, feedback } = req.body || {};
 
     const submission = await Submission.findById(submissionId);
 
@@ -259,6 +259,10 @@ const gradeSubmissions = async (req, res) => {
     }
 
     submission.marks = marks;
+
+    if (feedback !== undefined) {
+      submission.feedback = feedback;
+    }
 
     await submission.save();
 
