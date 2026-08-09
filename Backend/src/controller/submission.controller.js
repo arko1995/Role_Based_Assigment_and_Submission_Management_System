@@ -83,7 +83,7 @@ const updateSubmission = async (req, res) => {
       });
     }
 
-    const assignment = await Assignment.findById(submissionId);
+    const assignment = await Assignment.findById(submission.assignment);
 
     if (!assignment) {
       return res.status(400).json({
