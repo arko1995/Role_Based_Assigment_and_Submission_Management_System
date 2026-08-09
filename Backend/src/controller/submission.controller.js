@@ -70,14 +70,14 @@ const updateSubmission = async (req, res) => {
     const submission = await Submission.findById(submissionId);
 
     if (!submission) {
-      return res.status(400).json({
+      return res.status(404).json({
         success: false,
         message: "Submission not found",
       });
     }
 
     if (submission.student._id.toString() !== req.user.id.toString()) {
-      return res.status(400).json({
+      return res.status(403).json({
         success: false,
         message: "Authorization Blocked",
       });
@@ -86,7 +86,7 @@ const updateSubmission = async (req, res) => {
     const assignment = await Assignment.findById(submission.assignment);
 
     if (!assignment) {
-      return res.status(400).json({
+      return res.status(404).json({
         success: false,
         message: "Assignment not found",
       });
@@ -101,7 +101,7 @@ const updateSubmission = async (req, res) => {
 
     submission.answer = answer;
 
-    submission.save();
+    await submission.save();
 
     res.status(200).json({
       success: true,
