@@ -205,9 +205,92 @@ const getAssignmentSubmissions = async (req, res) => {
   }
 };
 
+const getAllSubmissions = async (req, res) => {
+  try {
+    const submissions = await Submission.find();
+
+    if (!submissions) {
+      return res.status(404).json({
+        success: false,
+        message: "No submission data found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "All submissions data fetched",
+      data: submissions,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+      error: error.message,
+    });
+  }
+};
+
+const gradeSubmissions = async (req, res) => {
+  try {
+    const { submissionId } = req.params;
+
+    const { marks } = req.body || {};
+
+    const submission = await Submission.findById(submissionId);
+
+    if (!submission) {
+      return res.status(404).json({
+        success: false,
+        message: "No submission found",
+      });
+    }
+
+    const assignment = await Assignment.findById(submission.assignment);
+
+    if (!assignment) {
+      return res.status(404).json({
+        success: false,
+        message: "This has not been submitted yet",
+      });
+    }
+
+    if (assignment.createdBy._id.toString() !== req.user.id.toString()) {
+      return res.status(403).json({
+        success: false,
+        message: "Unauthorized access",
+      });
+    }
+
+    if (marks === undefined || marks < 0 || marks > assignment.maxMarks) {
+      return res.status(400).json({
+        success: false,
+        message: `Marks must be between 0 and ${assignment.maxMarks}`,
+      });
+    }
+
+    assignment.marks = marks;
+
+    await assignment.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Submission graded successfully",
+      data: assignment,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+      error: error.message,
+    });
+  }
+};
+
 export {
   createSubmission,
   updateSubmission,
   getMySubmissions,
   getAssignmentSubmissions,
+  getAllSubmissions,
+  gradeSubmissions,
 };
