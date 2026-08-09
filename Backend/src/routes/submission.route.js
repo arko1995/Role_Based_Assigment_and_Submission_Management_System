@@ -1,7 +1,14 @@
 import express from "express";
-import { createSubmission } from "../controller/submission.controller.js";
+import {
+  createSubmission,
+  updateSubmission,
+} from "../controller/submission.controller.js";
+import { protectRoute, allowRoles } from "../middleware/auth.middleware.js";
 const router = express.Router();
-
-router.route("/:assignmentId").post(createSubmission);
+router.use(protectRoute);
+router
+  .route("/:assignmentId")
+  .post(allowRoles("student"), createSubmission)
+  .patch(allowRoles("student"), updateSubmission);
 
 export default router;
