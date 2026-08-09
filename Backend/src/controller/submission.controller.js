@@ -177,19 +177,14 @@ const getAssignmentSubmissions = async (req, res) => {
       }
     }
 
-    const submission = await Submission.findById({ assignment: assignmentId });
-
-    if (!submission) {
-      return res.status(404).json({
-        success: false,
-        message: "This has not been submitted yet",
-      });
-    }
+    const submissions = await Submission.find({
+      assignment: assignmentId,
+    }).populate("student", "name email course");
 
     res.status(200).json({
       success: true,
       message: "Submission data successfully fetched",
-      data: submission,
+      data: submissions,
     });
   } catch (error) {
     res.status(500).json({

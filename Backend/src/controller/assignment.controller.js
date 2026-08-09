@@ -205,6 +205,7 @@ const deleteAssignment = async (req, res) => {
 
     const deletedAssignment = await Assignment.findByIdAndDelete(id);
     const deletedSubmission = await Submission.deleteMany({ assignment: id });
+
     res.status(200).json({
       success: true,
       message: "Document deleted successfully",

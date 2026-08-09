@@ -22,7 +22,7 @@ router.patch("/:submissionId", allowRoles("student"), updateSubmission);
 
 //teacher/admin
 router.get(
-  "/assignment/assignmentId",
+  "/assignment/:assignmentId",
   allowRoles("admin", "teacher"),
   getAssignmentSubmissions,
 );
