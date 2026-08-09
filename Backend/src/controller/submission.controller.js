@@ -263,14 +263,14 @@ const gradeSubmissions = async (req, res) => {
       });
     }
 
-    assignment.marks = marks;
+    submission.marks = marks;
 
-    await assignment.save();
+    await submission.save();
 
     res.status(200).json({
       success: true,
       message: "Submission graded successfully",
-      data: assignment,
+      data: submission,
     });
   } catch (error) {
     res.status(500).json({

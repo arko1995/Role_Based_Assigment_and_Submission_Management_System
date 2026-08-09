@@ -1,5 +1,5 @@
 import Assignment from "../model/assignment.model.js";
-
+import Submission from "../model/submission.model.js";
 const createAssignment = async (req, res) => {
   try {
     const { title, description, course, subject, deadline, maxMarks } =
@@ -204,7 +204,7 @@ const deleteAssignment = async (req, res) => {
     }
 
     const deletedAssignment = await Assignment.findByIdAndDelete(id);
-
+    const deletedSubmission = await Submission.deleteMany({ assignment: id });
     res.status(200).json({
       success: true,
       message: "Document deleted successfully",
