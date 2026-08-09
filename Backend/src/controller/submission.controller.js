@@ -135,4 +135,79 @@ const updateSubmission = async (req, res) => {
   }
 };
 
-export { createSubmission, updateSubmission };
+const getMySubmissions = async (req, res) => {
+  try {
+    const submissions = await Submission.find({ student: req.user.id });
+
+    if (!submissions) {
+      return res.status(404).json({
+        success: false,
+        message: "Submission not found",
+      });
+    }
+
+    res.status(200).json({
+      success: false,
+      message: "Fetched submission data",
+      data: submission,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      error: error.message,
+    });
+  }
+};
+
+const getAssignmentSubmissions = async (req, res) => {
+  try {
+    const { assignmentId } = req.params;
+
+    const assignment = await Assignment.findById(assignmentId);
+
+    if (!assignment) {
+      return res.status(404).json({
+        success: false,
+        message: "Assignment not found",
+      });
+    }
+
+    if (req.user.role === "teacher") {
+      if (assignment.createdBy !== req.user.id) {
+        return res.status(403).json({
+          success: false,
+          message: "You don't have access to this document",
+        });
+      }
+    }
+
+    const submission = await Submission.findById({ assignment: assignmentId });
+
+    if (!submission) {
+      return res.status(404).json({
+        success: false,
+        message: "This has not been submitted yet",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Submission data successfully fetched",
+      data: submission,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      error: error.message,
+    });
+  }
+};
+
+export {
+  createSubmission,
+  updateSubmission,
+  getMySubmissions,
+  getAssignmentSubmissions,
+};
