@@ -41,7 +41,7 @@ const createSubmission = async (req, res) => {
       });
     }
 
-    const existingSubmission = await Submission.find({
+    const existingSubmission = await Submission.findOne({
       assignment: assignmentId,
       student: req.user.id,
     });
