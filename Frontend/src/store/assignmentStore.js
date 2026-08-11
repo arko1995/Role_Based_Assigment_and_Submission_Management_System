@@ -49,7 +49,7 @@ export const useAssignmentStore = create((set) => ({
       const response = await api.post("/assignment", data);
 
       set((state) => ({
-        assignments = [...state.assignments, response.data.data]
+        assignments: [...state.assignments, response.data.data],
       }));
       set({ loading: false });
       return response.data;
@@ -70,7 +70,7 @@ export const useAssignmentStore = create((set) => ({
       set((state) => ({
         assignments: state.assignments.map((assignment) =>
           assignment.id === id ? response.data.data : assignment,
-        )
+        ),
       }));
 
       set({ loading: false });
@@ -93,7 +93,7 @@ export const useAssignmentStore = create((set) => ({
       set((state) => ({
         assignments: state.assignments.map((assignment) =>
           assignment.id === id ? response.data.data : assignment,
-        )
+        ),
       }));
 
       set({ loading: false });
@@ -116,7 +116,7 @@ export const useAssignmentStore = create((set) => ({
       set((state) => ({
         assignments: state.assignments.filter(
           (assignment) => assignment.id !== id,
-        )
+        ),
       }));
 
       set({ loading: false });
