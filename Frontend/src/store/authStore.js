@@ -3,10 +3,10 @@ import api from "../api/api.js";
 
 const savedUser = localStorage.getItem("user");
 
-export const useAuthStore = create((set) => {
-  user: savedUser ? JSON.parse(savedUser) : null;
-  loading: null;
-  error: null;
+export const useAuthStore = create((set) => ({
+  user: savedUser ? JSON.parse(savedUser) : null,
+  loading: false,
+  error: null,
 
   login: async (email, password) => {
     try {
@@ -14,7 +14,7 @@ export const useAuthStore = create((set) => {
 
       const response = await api.post("/auth/login", { email, password });
 
-      const { token, user } = response.data;
+      const { token, user } = response.data.data;
 
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(user));
@@ -31,7 +31,7 @@ export const useAuthStore = create((set) => {
         error: error.response?.data?.message || "Login Failed",
       });
     }
-  };
+  },
 
   logout: () => {
     localStorage.removeItem("token");
@@ -41,9 +41,9 @@ export const useAuthStore = create((set) => {
       user: null,
       error: null,
     });
-  };
+  },
 
   clearError: () => {
     set({ error: null });
-  };
-});
+  },
+}));

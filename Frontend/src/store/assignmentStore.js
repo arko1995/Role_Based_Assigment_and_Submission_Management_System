@@ -1,11 +1,11 @@
 import { create } from "zustand";
 import api from "../api/api.js";
 
-export const useAssignmentStore = create((set) => {
-  assignments: [];
-  selectedAssignment: null;
-  loading: false;
-  error: null;
+export const useAssignmentStore = create((set) => ({
+  assignments: [],
+  selectedAssignment: null,
+  loading: false,
+  error: null,
 
   getAssignments: async () => {
     try {
@@ -14,7 +14,7 @@ export const useAssignmentStore = create((set) => {
       const response = await api.get("/assignment");
 
       set({
-        assignments: response.data,
+        assignments: response.data.data,
         loading: true,
       });
     } catch (error) {
@@ -23,7 +23,7 @@ export const useAssignmentStore = create((set) => {
         error: error.response?.data?.message || "Could not load assignments",
       });
     }
-  };
+  },
 
   getAssignment: async (id) => {
     try {
@@ -32,7 +32,7 @@ export const useAssignmentStore = create((set) => {
       const response = await api.get(`/assignment/${id}`);
 
       set({
-        selectedAssignment: response.data,
+        selectedAssignment: response.data.data,
         loading: false,
       });
     } catch (error) {
@@ -41,7 +41,7 @@ export const useAssignmentStore = create((set) => {
         error: error.response?.data?.message || "Could not load assignment",
       });
     }
-  };
+  },
 
   createAssignment: async (data) => {
     try {
@@ -49,7 +49,7 @@ export const useAssignmentStore = create((set) => {
       const response = await api.post("/assignment", data);
 
       set((state) => {
-        assignments = [...state.assignments, response.data];
+        assignments = [...state.assignments, response.data.data];
       });
       set({ loading: false });
       return response.data;
@@ -59,7 +59,7 @@ export const useAssignmentStore = create((set) => {
         error: error.response?.data?.message || "Assignment creation failed",
       });
     }
-  };
+  },
 
   updateAssignment: async (id, data) => {
     try {
@@ -69,7 +69,7 @@ export const useAssignmentStore = create((set) => {
 
       set((state) => {
         assignments: state.assignments.map((assignment) =>
-          assignment.id === id ? response.data : assignment,
+          assignment.id === id ? response.data.data : assignment,
         );
       });
 
@@ -82,7 +82,7 @@ export const useAssignmentStore = create((set) => {
         error: error.response?.data?.message || "Failed to update assignment",
       });
     }
-  };
+  },
 
   publishAssignment: async (id) => {
     try {
@@ -92,7 +92,7 @@ export const useAssignmentStore = create((set) => {
 
       set((state) => {
         assignments: state.assignments.map((assignment) =>
-          assignment.id === id ? response.data : assignment,
+          assignment.id === id ? response.data.data : assignment,
         );
       });
 
@@ -105,7 +105,7 @@ export const useAssignmentStore = create((set) => {
         error: error.response?.data?.message || "Failed publishing assignment",
       });
     }
-  };
+  },
 
   deleteAssignment: async (id) => {
     try {
@@ -126,5 +126,9 @@ export const useAssignmentStore = create((set) => {
         error: error.response?.data?.message || "Failed to delete assignment",
       });
     }
-  };
-});
+  },
+
+  clearError: () => {
+    set({ error: null });
+  },
+}));
