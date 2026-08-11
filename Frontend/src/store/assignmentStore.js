@@ -65,7 +65,7 @@ export const useAssignmentStore = create((set) => ({
     try {
       set({ loading: true, error: null });
 
-      const response = api.patch(`/assignment/${id}`, data);
+      const response = await api.patch(`/assignment/${id}`, data);
 
       set((state) => ({
         assignments: state.assignments.map((assignment) =>
@@ -86,7 +86,7 @@ export const useAssignmentStore = create((set) => ({
 
   publishAssignment: async (id) => {
     try {
-      set({ loading: false, error: null });
+      set({ loading: true, error: null });
 
       const response = await api.patch(`/assignment/${id}/publish`);
 
@@ -109,7 +109,7 @@ export const useAssignmentStore = create((set) => ({
 
   deleteAssignment: async (id) => {
     try {
-      set({ loading: false, error: null });
+      set({ loading: true, error: null });
 
       const response = await api.delete(`/assignment/${id}`);
 
