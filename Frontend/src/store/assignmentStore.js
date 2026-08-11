@@ -60,6 +60,7 @@ export const useAssignmentStore = create((set) => ({
         loading: false,
         error: error.response?.data?.message || "Assignment creation failed",
       });
+      throw error;
     }
   },
 
