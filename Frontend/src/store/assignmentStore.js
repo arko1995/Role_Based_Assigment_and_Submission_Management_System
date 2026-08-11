@@ -15,7 +15,7 @@ export const useAssignmentStore = create((set) => ({
 
       set({
         assignments: response.data.data,
-        loading: true,
+        loading: false,
       });
     } catch (error) {
       set({
@@ -48,9 +48,9 @@ export const useAssignmentStore = create((set) => ({
       set({ loading: true, error: null });
       const response = await api.post("/assignment", data);
 
-      set((state) => {
-        assignments = [...state.assignments, response.data.data];
-      });
+      set((state) => ({
+        assignments = [...state.assignments, response.data.data]
+      }));
       set({ loading: false });
       return response.data;
     } catch (error) {
@@ -67,11 +67,11 @@ export const useAssignmentStore = create((set) => ({
 
       const response = api.patch(`/assignment/${id}`, data);
 
-      set((state) => {
+      set((state) => ({
         assignments: state.assignments.map((assignment) =>
           assignment.id === id ? response.data.data : assignment,
-        );
-      });
+        )
+      }));
 
       set({ loading: false });
 
@@ -90,11 +90,11 @@ export const useAssignmentStore = create((set) => ({
 
       const response = await api.patch(`/assignment/${id}/publish`);
 
-      set((state) => {
+      set((state) => ({
         assignments: state.assignments.map((assignment) =>
           assignment.id === id ? response.data.data : assignment,
-        );
-      });
+        )
+      }));
 
       set({ loading: false });
 
@@ -113,11 +113,11 @@ export const useAssignmentStore = create((set) => ({
 
       const response = await api.delete(`/assignment/${id}`);
 
-      set((state) => {
+      set((state) => ({
         assignments: state.assignments.filter(
           (assignment) => assignment.id !== id,
-        );
-      });
+        )
+      }));
 
       set({ loading: false });
     } catch (error) {
