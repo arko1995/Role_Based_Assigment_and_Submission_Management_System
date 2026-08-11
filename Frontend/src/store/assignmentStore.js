@@ -69,7 +69,7 @@ export const useAssignmentStore = create((set) => ({
 
       set((state) => ({
         assignments: state.assignments.map((assignment) =>
-          assignment.id === id ? response.data.data : assignment,
+          assignment._id === id ? response.data.data : assignment,
         ),
       }));
 
@@ -92,7 +92,7 @@ export const useAssignmentStore = create((set) => ({
 
       set((state) => ({
         assignments: state.assignments.map((assignment) =>
-          assignment.id === id ? response.data.data : assignment,
+          assignment._id === id ? response.data.data : assignment,
         ),
       }));
 
@@ -115,7 +115,7 @@ export const useAssignmentStore = create((set) => ({
 
       set((state) => ({
         assignments: state.assignments.filter(
-          (assignment) => assignment.id !== id,
+          (assignment) => assignment._id !== id,
         ),
       }));
 
