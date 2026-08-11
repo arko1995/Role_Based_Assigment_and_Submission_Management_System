@@ -1,4 +1,4 @@
-import React, { use } from "react";
+import React from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "../store/authStore.js";
@@ -14,7 +14,7 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      const user = login(email, password);
+      const user = await login(email, password);
 
       if (user.role === "student") {
         navigate("/student");
