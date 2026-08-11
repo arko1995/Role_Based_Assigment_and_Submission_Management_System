@@ -22,6 +22,7 @@ export const useAssignmentStore = create((set) => ({
         loading: false,
         error: error.response?.data?.message || "Could not load assignments",
       });
+      throw error;
     }
   },
 
@@ -40,6 +41,7 @@ export const useAssignmentStore = create((set) => ({
         loading: false,
         error: error.response?.data?.message || "Could not load assignment",
       });
+      throw error;
     }
   },
 
@@ -52,7 +54,7 @@ export const useAssignmentStore = create((set) => ({
         assignments: [...state.assignments, response.data.data],
       }));
       set({ loading: false });
-      return response.data;
+      return response.data.data;
     } catch (error) {
       set({
         loading: false,
@@ -75,12 +77,13 @@ export const useAssignmentStore = create((set) => ({
 
       set({ loading: false });
 
-      return response.data;
+      return response.data.data;
     } catch (error) {
       set({
         loading: false,
         error: error.response?.data?.message || "Failed to update assignment",
       });
+      throw error;
     }
   },
 
@@ -98,12 +101,13 @@ export const useAssignmentStore = create((set) => ({
 
       set({ loading: false });
 
-      return response.data;
+      return response.data.data;
     } catch (error) {
       set({
         loading: false,
         error: error.response?.data?.message || "Failed publishing assignment",
       });
+      throw error;
     }
   },
 
@@ -125,6 +129,7 @@ export const useAssignmentStore = create((set) => ({
         loading: false,
         error: error.response?.data?.message || "Failed to delete assignment",
       });
+      throw error;
     }
   },
 
