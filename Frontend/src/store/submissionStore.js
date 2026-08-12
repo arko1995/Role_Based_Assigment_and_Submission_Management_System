@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import api from "../api/api.js";
 
-const useSubmissionStore = create((set) => ({
+export const useSubmissionStore = create((set) => ({
   submissions: [],
   loading: false,
   error: null,
@@ -31,7 +31,7 @@ const useSubmissionStore = create((set) => ({
 
       const response = await api.post(
         `/submissions/assignment/${assignmentId}`,
-        answer,
+        { answer },
       );
 
       const data = response.data.data;
@@ -53,7 +53,9 @@ const useSubmissionStore = create((set) => ({
     try {
       set({ loading: true, error: null });
 
-      const response = await api.patch(`/submissions/${submissionId}`, answer);
+      const response = await api.patch(`/submissions/${submissionId}`, {
+        answer,
+      });
 
       set({ loading: false });
 
