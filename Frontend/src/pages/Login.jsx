@@ -1,12 +1,12 @@
 import React from "react";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { useAuthStore } from "../store/authStore.js";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const { login, loading, error } = useAuthStore();
+  const { login, loading, error, user } = useAuthStore();
 
   const navigate = useNavigate();
 
@@ -25,6 +25,10 @@ const Login = () => {
       }
     } catch (error) {}
   };
+
+  if (user) {
+    return <Navigate to={`/${user.role}`} replace />;
+  }
 
   return (
     <div className=" flex min-h-screen items-center justify-center bg-slate-50 px-4">
