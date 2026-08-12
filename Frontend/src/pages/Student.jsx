@@ -70,12 +70,18 @@ const Student = () => {
         <h2 className="text-2xl font-bold text-slate-900">Student Dashboard</h2>
         <p className="mt-1 text-slate-500">View and manage your assignments</p>
 
+        {submissionsError && (
+          <p className="mt-4 text-sm text-red-600">{submissionsError}</p>
+        )}
+
+        {message && <p className="mt-4 text-sm text-green-600">{message}</p>}
+
         {assignmentsLoading ? (
           <p className="mt-6 text-slate-500">Loading Assignments...</p>
         ) : null}
 
         {assignmentsError ? (
-          <p className="mt-6 text-sm text-red-600">{error}</p>
+          <p className="mt-6 text-sm text-red-600">{assignmentsError}</p>
         ) : null}
 
         {!assignmentsLoading &&
@@ -95,7 +101,7 @@ const Student = () => {
             const answer =
               answers[assignment._id] ?? existingSubmission?.answer ?? "";
 
-            const deadLinePassed = new Date() > new Date(assignment.deadline);
+            const deadlinePassed = new Date() > new Date(assignment.deadline);
 
             return (
               <div
