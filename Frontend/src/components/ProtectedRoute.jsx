@@ -6,8 +6,6 @@ import { useAuthStore } from "../store/authStore";
 const ProtectedRoute = ({ children, allowedRoles }) => {
   const user = useAuthStore((state) => state.user);
 
-  const Navigate = useNavigate();
-
   if (!user) {
     return <Navigate to="/login" replace />;
   }
