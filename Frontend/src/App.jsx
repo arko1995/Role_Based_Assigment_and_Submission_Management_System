@@ -5,6 +5,8 @@ import Admin from "./pages/Admin.jsx";
 import Student from "./pages/Student.jsx";
 import Teacher from "./pages/Teacher.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
+import HomeRedirect from "./components/HomeRedirect.jsx";
+
 const App = () => {
   return (
     <div>
@@ -34,8 +36,8 @@ const App = () => {
             </ProtectedRoute>
           }
         />
-        <Route path="/" element={<Navigate to="/login" replace />} />
-        <Route path="*" element={<Navigate to="/login" replace />} />
+        <Route path="/" element={<HomeRedirect />} />
+        <Route path="*" element={<HomeRedirect />} />
       </Routes>
     </div>
   );
