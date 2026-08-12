@@ -1,13 +1,67 @@
-import React from "react";
+import React, { useState } from "react";
 import NavBar from "../components/NavBar";
 import { useEffect } from "react";
 import { useAssignmentStore } from "../store/assignmentStore.js";
+import { useSubmissionStore } from "../store/submissionStore.js";
 const Student = () => {
-  const { getAssignments, assignments, loading, error } = useAssignmentStore();
+  const {
+    getAssignments,
+    assignments,
+    loading: assignmentsLoading,
+    error: assignmentsError,
+  } = useAssignmentStore();
+
+  const {
+    submissions,
+    getMySubmissions,
+    createSubmission,
+    updateSubmission,
+    loading: submissionsLoading,
+    error: submissionsLoading,
+  } = useSubmissionStore();
 
   useEffect(() => {
-    getAssignments();
-  }, [getAssignments]);
+    getAssignments().catch(() => {});
+    getMySubmissions().catch(() => {});
+  }, [getAssignments, getMySubmissions]);
+
+  const [message, setMessage] = useState("");
+  const [answers, setAnswers] = useState({});
+
+  const getSubmissionForAssignment = (assignmentId) => {
+    return submissions.find((submission) => {
+      const id =
+        typeof submission.assignment === "object"
+          ? submission.assignment._id
+          : submission.assignment;
+
+      return id === assignmentId;
+    });
+  };
+
+  const handleSave = async (assignment) => {
+    const existingSubmission = getSubmissionForAssignment(assignment);
+
+    const answer = answers[assignment._id] ?? existingSubmission?.answer ?? "";
+
+    if (!answer.trim()) {
+      return;
+    }
+
+    try {
+      setMessage("");
+
+      if (existingSubmission) {
+        await updateSubmission(existingSubmission._id, answer);
+        setMessage("Answer updated successfully");
+      } else {
+        await createSubmission(assignment._id, answer);
+        setMessage("Answer submitted successfully");
+      }
+
+      await getMySubmissions();
+    } catch (error) {}
+  };
 
   return (
     <div className=" min-h-screen bg-slate-50">
@@ -36,7 +90,7 @@ const Student = () => {
             >
               <div className="flex items-start justify-between gap-4">
                 <div>
-                  <h3 className="ext-lg font-semibold text-slate-900">
+                  <h3 className="text-lg font-semibold text-slate-900">
                     {assignment.title}
                   </h3>
                   <p className="mt-1 text-sm text-slate-500">
