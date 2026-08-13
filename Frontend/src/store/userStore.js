@@ -45,6 +45,7 @@ export const useUserStore = create((set) => ({
 
       set((state) => ({
         users: [...state.users, { ...data, _id: data.id }],
+        loading: false,
       }));
 
       return data;
