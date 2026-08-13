@@ -100,6 +100,7 @@ Start the backend:
 ```bash
 cd Backend
 npm install
+npm run seed
 npm run dev
 ```
 
