@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import NavBar from "../components/NavBar";
 import { useAssignmentStore } from "../store/assignmentStore";
 import { useSubmissionStore } from "../store/submissionStore";
@@ -43,7 +43,7 @@ const Teacher = () => {
   }, [getAssignments]);
 
   const handleChange = (e) => {
-    setForm({ ...from, [e.target.name]: e.target.value });
+    setForm({ ...form, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
@@ -53,7 +53,7 @@ const Teacher = () => {
       setMessage("");
 
       const data = {
-        ...from,
+        ...form,
         maxMarks: Number(form.maxMarks),
       };
 

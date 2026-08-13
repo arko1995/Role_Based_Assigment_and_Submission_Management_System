@@ -74,7 +74,7 @@ export const useSubmissionStore = create((set) => ({
     try {
       set({ loading: true, error: null });
 
-      const response = await api.get(`/submission/assignment/${assignmentId}`);
+      const response = await api.get(`/submissions/assignment/${assignmentId}`);
 
       const data = response.data.data;
 
@@ -86,6 +86,8 @@ export const useSubmissionStore = create((set) => ({
         loading: false,
         error: error.response?.data?.message || "Could not load submissions",
       });
+
+      throw error;
     }
   },
 
@@ -100,7 +102,9 @@ export const useSubmissionStore = create((set) => ({
 
       set((state) => ({
         submissions: state.submissions.map((submission) =>
-          submission._id === submissionId ? response.data.data : submission,
+          submission._id === submissionId
+            ? { ...response.data.data, student: submission.student }
+            : submission,
         ),
         loading: false,
       }));
@@ -111,6 +115,8 @@ export const useSubmissionStore = create((set) => ({
         loading: false,
         error: error.response?.data?.message || "Could not grade submission",
       });
+
+      throw error;
     }
   },
 }));
