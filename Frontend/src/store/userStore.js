@@ -43,7 +43,9 @@ export const useUserStore = create((set) => ({
 
       const data = response.data.data;
 
-      set({ users: data, loading: false });
+      set((state) => {
+        users: [...state.users, { ...data, _id: data.id }];
+      });
 
       return data;
     } catch (error) {
@@ -60,15 +62,13 @@ export const useUserStore = create((set) => ({
     try {
       set({ loading: true, error: null });
 
-      const response = await api.patch(`/${userId}`, { updatedData });
+      const response = await api.patch(`/users/${userId}`, updatedData);
       const data = response.data.data;
 
-      set((state) => {
-        users: state.users.map((user) =>
-          user._id === userId ? { ...user, data } : user,
-        );
-        loading: false;
-      });
+      set((state) => ({
+        users: state.users.map((user) => (user._id === userId ? data : user)),
+        loading: false,
+      }));
 
       return data;
     } catch (error) {
@@ -85,12 +85,13 @@ export const useUserStore = create((set) => ({
     try {
       set({ loading: true, error: null });
 
-      const response = await api.delete(`/${userId}`);
+      const response = await api.delete(`/users/${userId}`);
 
       const data = response.data.data;
 
       set((state) => ({
         users: state.users.filter((user) => user._id !== userId),
+        loading: false,
       }));
 
       return data;
