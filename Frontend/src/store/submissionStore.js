@@ -69,4 +69,48 @@ export const useSubmissionStore = create((set) => ({
       throw error;
     }
   },
+
+  getAssignmentSubmissions: async (assignmentId) => {
+    try {
+      set({ loading: true, error: null });
+
+      const response = await api.get(`/submission/assignment/${assignmentId}`);
+
+      const data = response.data.data;
+
+      set({ submissions: data, loading: false });
+
+      return data;
+    } catch (error) {
+      set({
+        loading: false,
+        error: error.response?.data?.message || "Could not load submissions",
+      });
+    }
+  },
+
+  gradeSubmission: async (submissionId, marks, feedback) => {
+    try {
+      set({ loading: true, error: null });
+
+      const response = await api.patch(`/submissions/${submissionId}/grade`, {
+        marks: Number(marks),
+        feedback,
+      });
+
+      set((state) => ({
+        submissions: state.submissions.map((submission) =>
+          submission._id === submissionId ? response.data.data : submission,
+        ),
+        loading: false,
+      }));
+
+      return response.data.data;
+    } catch (error) {
+      set({
+        loading: false,
+        error: error.response?.data?.message || "Could not grade submission",
+      });
+    }
+  },
 }));
