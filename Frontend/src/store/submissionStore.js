@@ -119,4 +119,25 @@ export const useSubmissionStore = create((set) => ({
       throw error;
     }
   },
+
+  getAllSubmissions: async () => {
+    try {
+      set({ loading: true, error: null });
+
+      const response = await api.get("/submissions");
+      const data = response.data.data;
+
+      set({ submissions: data, loading: false });
+
+      return data;
+    } catch (error) {
+      set({
+        loading: false,
+        error:
+          error.response?.data?.message || "Unable to load all submissions",
+      });
+
+      throw error;
+    }
+  },
 }));
